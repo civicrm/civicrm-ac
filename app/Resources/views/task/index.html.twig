@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Tasks</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Type</th>
+                <th>Subtype</th>
+                <th>External id</th>
+                <th>Date</th>
+                <th>Url</th>
+                <th>Description</th>
+                <th>Value</th>
+                <th>Contributor external id</th>
+                <th>Contributor external id type</th>
+                <th>Contact id</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for task in tasks %}
+            <tr>
+                <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.id }}</a></td>
+                <td>{{ task.type }}</td>
+                <td>{{ task.subtype }}</td>
+                <td>{{ task.externalId }}</td>
+                <td>{% if task.date %}{{ task.date|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ task.url }}</td>
+                <td>{{ task.description }}</td>
+                <td>{{ task.value }}</td>
+                <td>{{ task.contributorExternalId }}</td>
+                <td>{{ task.contributorExternalIdType }}</td>
+                <td>{{ task.contactId }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('task_show', { 'id': task.id }) }}">show</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    
+{% endblock %}

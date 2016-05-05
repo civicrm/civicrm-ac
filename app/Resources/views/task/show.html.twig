@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Task</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ task.id }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ task.type }}</td>
+            </tr>
+            <tr>
+                <th>Externalid</th>
+                <td>{{ task.externalId }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{% if task.date %}{{ task.date|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Url</th>
+                <td>{{ task.url }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ task.description }}</td>
+            </tr>
+            <tr>
+                <th>Value</th>
+                <td>{{ task.value }}</td>
+            </tr>
+            <tr>
+                <th>Contributorexternalid</th>
+                <td>{{ task.contributorExternalId }}</td>
+            </tr>
+            <tr>
+                <th>Contributorexternalidtype</th>
+                <td>{{ task.contributorExternalIdType }}</td>
+            </tr>
+            <tr>
+                <th>Contactid</th>
+                <td>{{ task.contactId }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('task_index') }}">Back to the list</a>
+        </li>
+    </ul>
+{% endblock %}

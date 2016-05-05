@@ -1,0 +1,47 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+parameters:
+#    parameter_name: value
+
+services:
+#    service_name:
+#        class: AppBundle\Directory\ClassName
+#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+
+
+    app.poll:
+        abstract: true
+        calls:
+            - ["initDates"]
+            - ["setEntityManager", ['@doctrine.orm.entity_manager']]
+
+    app.poll.commits:
+        parent:    "app.poll"
+        class:        AppBundle\Utils\Poll\Commits
+        arguments: ['@app.source.github']
+
+    app.poll.content:
+        parent:    "app.poll"
+        class:        AppBundle\Utils\Poll\Content
+        arguments: ['@app.source.civicrm']
+
+    app.source.github:
+        class:        AppBundle\Utils\Source\Github
+        arguments: ['@app.source.github.client', '@app.source.github.result_pager', '%github.auth_http_token%']
+
+    app.source.civicrm:
+        class:        AppBundle\Utils\Source\CiviCRM
+        arguments: ['@app.source.github.client', '@app.source.github.result_pager', '%github.auth_http_token%']
+
+    app.source.github.result_pager:
+        class:        Github\ResultPager
+        arguments: ['@app.source.github.client']
+
+    app.source.github.client:
+        class:        Github\Client
+        arguments: ['@app.source.github.cached_http_client']
+
+    app.source.github.cached_http_client:
+        class:        Github\HttpClient\CachedHttpClient
+        arguments:
+            - cache_dir: "%kernel.cache_dir%/github-api-cache"
