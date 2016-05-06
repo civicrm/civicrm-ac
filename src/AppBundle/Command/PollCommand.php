@@ -8,9 +8,12 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use AppBundle\Entity\Task;
 
 class PollCommand extends ContainerAwareCommand
 {
+    const DATE_FORMAT = 'g:ia \o\n jS M Y';
+    
     protected function configure()
     {
         $this
@@ -76,10 +79,13 @@ class PollCommand extends ContainerAwareCommand
 
     protected function poll(InputInterface $input, OutputInterface $output)
     {
+
+
+        
         $this->poll->startDate = $this->startDate;
         $this->poll->endDate = $this->endDate;
 
-        $this->io->text("Querying for {$this->name} between {$input->getOption('from')} and {$input->getOption('to')} ...");
+        $this->io->text("Querying for {$this->name} between {$this->startDate->format(self::DATE_FORMAT)} and {$this->endDate->format(self::DATE_FORMAT)}.");
 
         $this->poll->query();
         $this->flushErrors();
@@ -117,8 +123,9 @@ class PollCommand extends ContainerAwareCommand
     {
         $startDate = new \DateTime($input->getOption('from'));
         $endDate = new \DateTime($input->getOption('to'));
+        
 
-        $this->io->text("Deleting {$this->name} between {$input->getOption('from')} and {$input->getOption('to')} ...");
+        $this->io->text("Deleting {$this->name} between {$this->startDate->format(self::DATE_FORMAT)} and {$this->endDate->format(self::DATE_FORMAT)}.");
 
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
