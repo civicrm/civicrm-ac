@@ -22,10 +22,9 @@ class Commits extends Poll
             try {
                 $commits = $this->source->resultPager->fetchAll($commitsApi, 'all', $parameters);
                 foreach ($commits as $commit) {
-                    
                     $this->results[] = array(
-                        'repo'=> $repository,
-                        'commit'=> $commit,
+                        'repo' => $repository,
+                        'commit' => $commit,
                     );
                 }
             } catch (\Github\Exception\RuntimeException $e) {
@@ -33,21 +32,17 @@ class Commits extends Poll
             }
         }
     }
-    
 
-    public function transform($result)
+    public function transform($result, $task)
     {
-        $task = $this->initTask();
         $task->setExternalId($result['commit']['sha']);
         $task->setUrl($result['commit']['html_url']);
         $task->setDescription($result['commit']['commit']['message']);
-        $task->setContributorExternalId($result['commit']['commit']['committer']['email']);
         $task->setDate($this->createDate($result['commit']['commit']['committer']['date']));
-        $task->setContributorExternalIdType('email');
+        $task->setContributorId($result['commit']['commit']['committer']['email']);
+        $task->setContributorIdType('email');
         $task->setDescription($result['commit']['commit']['message']);
-        $task->setValue($this->getValue());
+        $task->setValue(1);
         $task->setSubtype(split('/', $result['commit']['url'])[5]); //repo name is not easily accessible in the commits API (it is presumed we know this already)
-
-        return $task;
     }
 }
