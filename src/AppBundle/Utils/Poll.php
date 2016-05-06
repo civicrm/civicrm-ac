@@ -2,8 +2,6 @@
 
 namespace AppBundle\Utils;
 
-use AppBundle\Entity\Task;
-
 abstract class Poll
 {
     public $startDate;
@@ -19,6 +17,10 @@ abstract class Poll
         $this->source = $source;
     }
     
+    abstract function query();
+
+    abstract function transform($result, $task);
+
     public function initDates($startDate = null, $endDate = null, $dateFormat = null)
     {
         $this->startDate = $startDate ? $startDate : new \DateTime('yesterday', new \DateTimeZone('UTC'));
@@ -36,10 +38,6 @@ abstract class Poll
         return $this->results;
     }
 
-    function getValue($result = null){
-        return 1;
-    }
-
 
     public function formatDate($date)
     {
@@ -49,13 +47,4 @@ abstract class Poll
     {
         return \DateTime::createFromFormat($this->dateFormat, $string);
     }
-
-    protected function initTask()
-    {
-        $task = new Task();
-        $task->setType($this->name);
-        return $task;
-    }
-    
-
 }

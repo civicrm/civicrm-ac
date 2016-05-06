@@ -68,9 +68,8 @@ class Task
      * @Assert\NotNull()
      */
     private $description;
-
     /**
-     * @var integer
+     * @var string
      *
      * @ORM\Column(name="value", type="integer")
      * @Assert\NotNull()
@@ -80,25 +79,22 @@ class Task
     /**
      * @var string
      *
-     * @ORM\Column(name="contributorExternalId", type="string", length=255)
+     * @ORM\Column(name="contributorId", type="string", length=255)
      * @Assert\NotNull()
      */
-    private $contributorExternalId;
+    private $contributorId;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="contributorExternalIdType", type="string", length=255)
+     * @ORM\Column(name="contributorIdType", type="string", length=255)
      * @Assert\NotNull()
      */
-    private $contributorExternalIdType;
+    private $contributorIdType;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="contactId", type="integer", nullable=true)
-     */
-    private $contactId;
+     * @ORM\ManyToOne(targetEntity="Contributor")     */
+    private $contributor;
 
     
 
@@ -205,49 +201,49 @@ class Task
     }
 
     /**
-     * Set contributorExternalId
+     * Set contributorId
      *
-     * @param string $contributorExternalId
+     * @param string $contributorId
      * @return Task
      */
-    public function setContributorExternalId($contributorExternalId)
+    public function setContributorId($contributorId)
     {
-        $this->contributorExternalId = $contributorExternalId;
+        $this->contributorId = $contributorId;
 
         return $this;
     }
 
     /**
-     * Get contributorExternalId
+     * Get contributorId
      *
      * @return string 
      */
-    public function getContributorExternalId()
+    public function getContributorId()
     {
-        return $this->contributorExternalId;
+        return $this->contributorId;
     }
 
     /**
-     * Set contributorExternalIdType
+     * Set contributorIdType
      *
-     * @param string $contributorExternalIdType
+     * @param string $contributorIdType
      * @return Task
      */
-    public function setContributorExternalIdType($contributorExternalIdType)
+    public function setContributorIdType($contributorIdType)
     {
-        $this->contributorExternalIdType = $contributorExternalIdType;
+        $this->contributorIdType = $contributorIdType;
 
         return $this;
     }
 
     /**
-     * Get contributorExternalIdType
+     * Get contributorIdType
      *
      * @return string 
      */
-    public function getContributorExternalIdType()
+    public function getContributorIdType()
     {
-        return $this->contributorExternalIdType;
+        return $this->contributorIdType;
     }
 
     /**
@@ -341,5 +337,29 @@ class Task
     public function getSubtype()
     {
         return $this->subtype;
+    }
+
+    /**
+     * Set contributor
+     *
+     * @param \AppBundle\Entity\Contributor $contributor
+     *
+     * @return Task
+     */
+    public function setContributor(\AppBundle\Entity\Contributor $contributor = null)
+    {
+        $this->contributor = $contributor;
+
+        return $this;
+    }
+
+    /**
+     * Get contributor
+     *
+     * @return \AppBundle\Entity\Contributor
+     */
+    public function getContributor()
+    {
+        return $this->contributor;
     }
 }

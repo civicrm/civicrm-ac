@@ -9,6 +9,7 @@ Tasks are recorded in many different systems. We poll those systems on a regular
 ##Tasks
 
 Tasks that have been completed.
+
 ##Sources
 
 Places that we query for tasks.
@@ -77,11 +78,11 @@ Creates a $task with values from the $result. Tasks have the following propertie
 * date - the date that the task was completed
 * url - A url that links to the task, or more details about the task
 * description - a short summary of the task
-* value - 
-
-
+* contributorId - uniquely identifies the person that completed the task
+* contributorIdType - the type of identifier used for contributorId
 
 # Outstanding tasks
 
 * Service that returns a CiviCRM contact ID when presented with an external ID and external ID type, e.g. https://co/api/contacts/find?email=michael@civicrm.org
 * Prototype hall of fame
+* Validate dates entered for app:poll

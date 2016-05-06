@@ -93,7 +93,9 @@ class PollCommand extends ContainerAwareCommand
         $count = 0;
         $this->io->text("Adding {$this->name}...");
         foreach ($this->poll->results as $result) {
-            $task = $this->poll->transform($result);
+            $task = new Task();
+            $task->setType($this->poll->name);
+            $this->poll->transform($result, $task);
             $errors = $validator->validate($task);
             if ($errors->count()) {
                 $this->io->note("Task with id {$task->getExternalId()} ({$task->getUrl()}) already exists in database."); // TODO: we might be masking other errors here
