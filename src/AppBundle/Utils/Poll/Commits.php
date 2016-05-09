@@ -6,8 +6,6 @@ use AppBundle\Utils\Poll;
 
 class Commits extends Poll
 {
-    public $name = 'commits';
-
     public function query()
     {
         $orgApi = $this->source->client->api('organization');
@@ -16,8 +14,8 @@ class Commits extends Poll
         $commitsApi = $this->source->client->api('repo')->commits();
         foreach ($repositories as $repository) {
             $parameters = array('civicrm', $repository['name'], array(
-                'since' => $this->formatDate($this->startDate),
-                'until' => $this->formatDate($this->endDate),
+                'since' => $this->startDate->format($this->dateFormat),
+                'until' => $this->endDate->format($this->dateFormat),
             ));
             try {
                 $commits = $this->source->resultPager->fetchAll($commitsApi, 'all', $parameters);
@@ -42,7 +40,7 @@ class Commits extends Poll
         $task->setContributorId($result['commit']['commit']['committer']['email']);
         $task->setContributorIdType('email');
         $task->setDescription($result['commit']['commit']['message']);
-        $task->setValue(1);
-        $task->setSubtype(split('/', $result['commit']['url'])[5]); //repo name is not easily accessible in the commits API (it is presumed we know this already)
+        $task->setValue(2);
+        $task->setSubtype($result['repo']['name']);
     }
 }

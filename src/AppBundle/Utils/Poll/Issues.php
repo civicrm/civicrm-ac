@@ -6,8 +6,6 @@ use AppBundle\Utils\Poll;
 
 class Issues extends Poll
 {
-    public $name = 'issues';
-
     public function query()
     {
         $orgApi = $this->source->client->api('organization');

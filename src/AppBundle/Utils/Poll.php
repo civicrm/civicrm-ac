@@ -15,17 +15,17 @@ abstract class Poll
     public function __construct($source)
     {
         $this->source = $source;
+        $this->dateFormat = $source->dateFormat;
     }
     
     abstract function query();
 
     abstract function transform($result, $task);
 
-    public function initDates($startDate = null, $endDate = null, $dateFormat = null)
+    public function init($startDate = null, $endDate = null, $dateFormat = null)
     {
         $this->startDate = $startDate ? $startDate : new \DateTime('yesterday', new \DateTimeZone('UTC'));
         $this->endDate = $endDate ? $endDate : new \DateTime('today', new \DateTimeZone('UTC'));
-        $this->dateFormat = $dateFormat ? $dateFormat : \DateTime::ISO8601;
     }
 
     public function setEntityManager($em)
@@ -38,11 +38,6 @@ abstract class Poll
         return $this->results;
     }
 
-
-    public function formatDate($date)
-    {
-        return $date->format($this->dateFormat);
-    }
     public function createDate($string)
     {
         return \DateTime::createFromFormat($this->dateFormat, $string);

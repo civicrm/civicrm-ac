@@ -4,6 +4,7 @@ namespace AppBundle\Utils\Source;
 
 use AppBundle\Utils\Source;
 use Github\Client;
+
 class Github extends Source
 {
     function __construct($client, $resultPager, $username, $password=''){

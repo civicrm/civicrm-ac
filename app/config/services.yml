@@ -1,47 +1,75 @@
-# Learn more about services, parameters and containers at
-# http://symfony.com/doc/current/book/service_container.html
 parameters:
-#    parameter_name: value
+    source.civiweb.base_uri: https://civicrm.org/api/ 
+    source.civicrm.base_uri: https://civicrm.org/sites/all/modules/civicrm/extern/rest.php
+    source.stack_exchange.base_uri: https://api.stackexchange.com/2.2/
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
 
-
-    app.poll:
+    poll:
         abstract: true
         calls:
-            - ["initDates"]
-            - ["setEntityManager", ['@doctrine.orm.entity_manager']]
+            - ["init"]
+    source:
+        abstract: true
+        calls:
+            - ["init"]
 
-    app.poll.commits:
-        parent:    "app.poll"
-        class:        AppBundle\Utils\Poll\Commits
-        arguments: ['@app.source.github']
+# Polls
+# Tip: A poll should define it's parent as poll
 
-    app.poll.content:
-        parent:    "app.poll"
-        class:        AppBundle\Utils\Poll\Content
-        arguments: ['@app.source.civicrm']
+    poll.commits:
+        parent: poll
+        class: AppBundle\Utils\Poll\Commits
+        arguments: ['@source.github']
 
-    app.source.github:
-        class:        AppBundle\Utils\Source\Github
-        arguments: ['@app.source.github.client', '@app.source.github.result_pager', '%github.auth_http_token%']
+    poll.nodes:
+        parent: poll
+        class: AppBundle\Utils\Poll\Nodes
+        arguments: ['@source.civiweb']
+    
+    poll.extensions:
+        parent: poll
+        class: AppBundle\Utils\Poll\Extensions
+        arguments: ['@source.civiweb']
 
-    app.source.civicrm:
-        class:        AppBundle\Utils\Source\CiviCRM
-        arguments: ['@app.source.github.client', '@app.source.github.result_pager', '%github.auth_http_token%']
+    poll.extension_releases:
+        parent: poll
+        class: AppBundle\Utils\Poll\ExtensionReleases
+        arguments: ['@source.civiweb']
+    
+    poll.comments:
+        parent: poll
+        class: AppBundle\Utils\Poll\Comments
+        arguments: ['@source.civiweb']
+    
+# Sources
+# Tip: A source should define it's parent as source
 
-    app.source.github.result_pager:
-        class:        Github\ResultPager
-        arguments: ['@app.source.github.client']
+    source.civiweb:
+        parent: source
+        class: AppBundle\Utils\Source\CiviWeb
+        arguments: ['%source.civiweb.base_uri%']
+        
+    source.civicrm:
+        parent: source
+        class: AppBundle\Utils\Source\CiviCRM
+        arguments: ['%source.civicrm.base_uri%', '%source.civicrm.key%', '%source.civicrm.api_key%']
+        
+    source.github:
+        parent: source
+        class: AppBundle\Utils\Source\Github
+        arguments: ['@github.client', '@github.result_pager', '%source.github.auth_http_token%']
 
-    app.source.github.client:
-        class:        Github\Client
-        arguments: ['@app.source.github.cached_http_client']
+    github.result_pager:
+        class: Github\ResultPager
+        arguments: ['@github.client']
 
-    app.source.github.cached_http_client:
-        class:        Github\HttpClient\CachedHttpClient
+    github.client:
+        class: Github\Client
+        arguments: ['@github.cached_http_client']
+
+    github.cached_http_client:
+        class: Github\HttpClient\CachedHttpClient
         arguments:
             - cache_dir: "%kernel.cache_dir%/github-api-cache"
+            
