@@ -33,7 +33,7 @@ class Task
     private $type;
 
     /**
-    * @ORM\Column(name="subtype", type="string", length=255)
+    * @ORM\Column(name="subtype", type="string", length=255, nullable=true)
      */
     private $subtype;
 
@@ -93,15 +93,16 @@ class Task
     private $contributorIdType;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Contributor")     */
+     * @ORM\ManyToOne(targetEntity="Contributor", inversedBy="tasks")
+     * @ORM\JoinColumn(name="contributor_id", referencedColumnName="id")
+     */
     private $contributor;
 
-    
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -109,170 +110,10 @@ class Task
     }
 
     /**
-     * Set externalID
-     *
-     * @param string $externalID
-     * @return Task
-     */
-    public function setExternalId($externalId)
-    {
-        $this->externalId = $externalId;
-
-        return $this;
-    }
-
-    /**
-     * Get externalID
-     *
-     * @return string 
-     */
-    public function getExternalId()
-    {
-        return $this->externalId;
-    }
-
-    /**
-     * Set url
-     *
-     * @param string $url
-     * @return Task
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    /**
-     * Get url
-     *
-     * @return string 
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     * @return Task
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string 
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Set value
-     *
-     * @param integer $value
-     * @return Task
-     */
-    public function setValue($value)
-    {
-        $this->value = $value;
-
-        return $this;
-    }
-
-    /**
-     * Get value
-     *
-     * @return integer 
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    /**
-     * Set contributorId
-     *
-     * @param string $contributorId
-     * @return Task
-     */
-    public function setContributorId($contributorId)
-    {
-        $this->contributorId = $contributorId;
-
-        return $this;
-    }
-
-    /**
-     * Get contributorId
-     *
-     * @return string 
-     */
-    public function getContributorId()
-    {
-        return $this->contributorId;
-    }
-
-    /**
-     * Set contributorIdType
-     *
-     * @param string $contributorIdType
-     * @return Task
-     */
-    public function setContributorIdType($contributorIdType)
-    {
-        $this->contributorIdType = $contributorIdType;
-
-        return $this;
-    }
-
-    /**
-     * Get contributorIdType
-     *
-     * @return string 
-     */
-    public function getContributorIdType()
-    {
-        return $this->contributorIdType;
-    }
-
-    /**
-     * Set contactId
-     *
-     * @param string $contactId
-     * @return Task
-     */
-    public function setContactId($contactId)
-    {
-        $this->contactId = $contactId;
-
-        return $this;
-    }
-
-    /**
-     * Get contactId
-     *
-     * @return string 
-     */
-    public function getContactId()
-    {
-        return $this->contactId;
-    }
-
-    /**
      * Set type
      *
      * @param string $type
+     *
      * @return Task
      */
     public function setType($type)
@@ -285,34 +126,11 @@ class Task
     /**
      * Get type
      *
-     * @return string 
+     * @return string
      */
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * Set date
-     *
-     * @param \DateTime $date
-     * @return Task
-     */
-    public function setDate($date)
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    /**
-     * Get date
-     *
-     * @return \DateTime 
-     */
-    public function getDate()
-    {
-        return $this->date;
     }
 
     /**
@@ -337,6 +155,174 @@ class Task
     public function getSubtype()
     {
         return $this->subtype;
+    }
+
+    /**
+     * Set externalId
+     *
+     * @param string $externalId
+     *
+     * @return Task
+     */
+    public function setExternalId($externalId)
+    {
+        $this->externalId = $externalId;
+
+        return $this;
+    }
+
+    /**
+     * Get externalId
+     *
+     * @return string
+     */
+    public function getExternalId()
+    {
+        return $this->externalId;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     *
+     * @return Task
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Set url
+     *
+     * @param string $url
+     *
+     * @return Task
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * Get url
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Task
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set value
+     *
+     * @param integer $value
+     *
+     * @return Task
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return integer
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Set contributorId
+     *
+     * @param string $contributorId
+     *
+     * @return Task
+     */
+    public function setContributorId($contributorId)
+    {
+        $this->contributorId = $contributorId;
+
+        return $this;
+    }
+
+    /**
+     * Get contributorId
+     *
+     * @return string
+     */
+    public function getContributorId()
+    {
+        return $this->contributorId;
+    }
+
+    /**
+     * Set contributorIdType
+     *
+     * @param string $contributorIdType
+     *
+     * @return Task
+     */
+    public function setContributorIdType($contributorIdType)
+    {
+        $this->contributorIdType = $contributorIdType;
+
+        return $this;
+    }
+
+    /**
+     * Get contributorIdType
+     *
+     * @return string
+     */
+    public function getContributorIdType()
+    {
+        return $this->contributorIdType;
     }
 
     /**
