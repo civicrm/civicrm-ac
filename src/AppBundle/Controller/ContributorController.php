@@ -25,7 +25,7 @@ class ContributorController extends Controller
     {
         $params = $this->getParams($request);        
         $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
-        $qb->select(array('c.name', 'c.contactId', 'count(t.id) as taskCount', 'sum(t.value) as taskValue'))
+        $qb->select(array('c.name', 'c.contactId', 'count(t.id) as taskCount'))
         ->from('AppBundle:Task', 't')
         ->join('t.identifier', 'i')
         ->join('i.contributor', 'c')
