@@ -31,13 +31,16 @@ The task type and task external ID are declared as unique which means we can pol
 Currently, polling is carried out via the command line, for example:
 
 ```
-app:poll commits # poll for commits in github yesterday
-app:poll comments # poll for comments made on the website yesterday
-app:poll merges # poll for merges closed in github yesterday
-app:poll commits -d # delete yesterday's commits
-app:poll commits -u # poll for yesterday's commits, updating any that have already been recorded
+app:poll # run all polls
+app:poll commits # poll for commits
+app:poll comments # poll for comments made on the website
+app:poll merges # poll for merges closed in github
+app:poll commits -d # delete commits
+app:poll commits -u # poll for commits, updating any that have already been recorded
 app:poll commits -f "2015-01-01" -t "2015-12-31" # poll for commits made in 2015
 ```
+
+The default poll timeframe is yesterday.
 
 ## Consuming tasks
 
