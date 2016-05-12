@@ -1,0 +1,42 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}{{contributor.name}}{% endblock %}
+
+{% block body %}
+<h1>{{contributor.name}}</h1>
+Total completed tasks: {{tasks|length}}
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Type</th>
+            <th>Subtype</th>
+            <th>External id</th>
+            <th>Date</th>
+            <th>Url</th>
+            <th>Description</th>
+            <th>Value</th>
+            <th>Identifier string</th>
+            <th>Identifier type</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for task in tasks %}
+        <tr>
+            <td><a href="{{ path('task_view', { 'id': task.id }) }}">{{ task.id }}</a></td>
+            <td>{{ task.type }}</td>
+            <td>{{ task.subtype }}</td>
+            <td>{{ task.externalIdentifier }}</td>
+            <td>{% if task.date %}{{ task.date|date('Y-m-d H:i:s') }}{% endif %}</td>
+            <td>{{ task.url }}</td>
+            <td>{{ task.description }}</td>
+            <td>{{ task.value }}</td>
+            <td>{{ task.identifierString }}</td>
+            <td>{{ task.identifierType }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -57,8 +57,6 @@ A couple of guidelines:
 
 * Please ensure you are recording completed tasks, not commitments to carry out a task.
 * It's a good idea to chat with someone in the active contributors working group about your Poll before getting started, so we can ensure that it makes sense to include in the framework.
-* 
-
 
 Polls are services that are defined in the src/AppBundle/Utils/Poll/ directory and registered in app/config/services.yml (which typically injects a source into the service).
 
@@ -74,15 +72,24 @@ Creates a $task with values from the $result. Tasks have the following propertie
 
 * type - set to the name of the poll
 * subtype (optional) further classify this task
-* externalId - this should be unique identifier for each type of task (ensuring that type+externalId is unique amongst the entire set of tasks) 
+* externalIdentifier - this should be unique identifier for each type of task (ensuring that type+externalId is unique amongst the entire set of tasks) 
 * date - the date that the task was completed
 * url - A url that links to the task, or more details about the task
 * description - a short summary of the task
-* contributorId - uniquely identifies the person that completed the task
-* contributorIdType - the type of identifier used for contributorId
+* identiferString - a string uniquely identifies the contribuor that completed the task (e.g. joe@bloggs.com)
+* identiferType - the type of identifier used for identify the contribtor (e.g. email)
 
-# Outstanding tasks
+# Todo
 
-* Service that returns a CiviCRM contact ID when presented with an external ID and external ID type, e.g. https://co/api/contacts/find?email=michael@civicrm.org
-* Prototype hall of fame
-* Validate dates entered for app:poll
+* More polls of more sources, including
+    * stack-exchange
+    * github pull requests
+    * github issues
+    * tweets(?)
+* Move this todo list to github issues
+* Read only API for general consumption of this data
+* UI for consumption on civicrm.org (read only API)
+* summary and detail views for all tasks
+* iframe for embedding on other websites (read only API)
+* Hall of fame for unknown contributors (i.e. people not linked to a contact in civicrm.org/civicrm)
+* Task that updates identifiers (e.g. when they become known, or when civicrm contacts have become merged, etc.)

@@ -14,31 +14,31 @@
                 <th>Url</th>
                 <th>Description</th>
                 <th>Value</th>
-                <th>Contributor id</th>
-                <th>Contributor id type</th>
-                <th>Actions</th>
+                <th>Identifier string</th>
+                <th>Identifier type</th>
+                <th>Contributor</th>
             </tr>
         </thead>
         <tbody>
         {% for task in tasks %}
             <tr>
-                <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.id }}</a></td>
+                <td><a href="{{ path('task_view', { 'id': task.id }) }}">{{ task.id }}</a></td>
                 <td>{{ task.type }}</td>
                 <td>{{ task.subtype }}</td>
-                <td>{{ task.externalId }}</td>
+                <td>{{ task.externalIdentifier }}</td>
                 <td>{% if task.date %}{{ task.date|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{{ task.url }}</td>
                 <td>{{ task.description }}</td>
                 <td>{{ task.value }}</td>
-                <td>{{ task.contributorId }}</td>
-                <td>{{ task.contributorIdType }}</td>
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('task_show', { 'id': task.id }) }}">show</a>
-                        </li>
-                    </ul>
-                </td>
+                <td>{{ task.identifierString }}</td>
+                <td>{{ task.identifierType }}</td>
+                {% if task.identifier.contributor.name is defined %}
+                    <td>
+                        <a href="{{ path('contributor_view', { 'contactId': task.identifier.contributor.contactId }) }}">
+                            {{ task.identifier.contributor.name }}
+                        </a>
+                    </td>
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>

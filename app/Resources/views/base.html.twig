@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}CiviCRM active contributors{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}CiviCRM active contributors{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+</head>
+
+<body>
+    <p style="font-weight: bold;">Active Contributor Framework:
+        <a href="{{ url('index') }}">About</a>
+        <a href="{{ url('contributor_index') }}">Contributors</a>
+        <a href="{{ url('task_index') }}">Tasks</a>
+    </p>
+    {% block body %}{% endblock %} {% block javascripts %}{% endblock %}
+</body>
+
 </html>

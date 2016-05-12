@@ -14,8 +14,8 @@
                 <td>{{ task.type }}</td>
             </tr>
             <tr>
-                <th>Externalid</th>
-                <td>{{ task.externalId }}</td>
+                <th>External ID</th>
+                <td>{{ task.externalIdentifier }}</td>
             </tr>
             <tr>
                 <th>Date</th>
@@ -34,23 +34,20 @@
                 <td>{{ task.value }}</td>
             </tr>
             <tr>
-                <th>Contributorexternalid</th>
-                <td>{{ task.contributorExternalId }}</td>
+                <th>Identifier string</th>
+                <td>{{ task.identifierString }}</td>
             </tr>
             <tr>
-                <th>Contributorexternalidtype</th>
-                <td>{{ task.contributorExternalIdType }}</td>
+                <th>Identifier type</th>
+                <td>{{ task.identifierType }}</td>
             </tr>
             <tr>
-                <th>Contactid</th>
-                <td>{{ task.contactId }}</td>
+                <th>Contributor</th>
+                <td>{% if task.identifier.contributor.name is defined %}                         <a href="{{ path('contributor_view', { 'contactId': task.identifier.contributor.contactId }) }}">
+                                            {{ task.identifier.contributor.name }}
+                                        </a>
+ {% else %} [not identified] {% endif %}</td>
             </tr>
         </tbody>
     </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('task_index') }}">Back to the list</a>
-        </li>
-    </ul>
 {% endblock %}

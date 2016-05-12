@@ -1,0 +1,26 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <h1>Contributor hall of fame</h1>
+    <table>
+        <tr>
+            <th>Name (contactId)</th>
+            <th>Number of tasks</th>
+            <th>Value of tasks</th>
+        </tr>
+        {% for contributor in contributors %}
+            <tr>
+                <td>
+                    <a href="{{ path('contributor_view', { 'contactId': contributor.contactId }) }}">
+                        {{ contributor.name }}
+                        ({{ contributor.contactId }})
+                    </a>
+                </td>
+                <td>{{contributor.taskCount}}</td>
+                <td>{{contributor.taskValue}}</td>
+            </tr>
+            <p></p>
+        {% endfor %}
+    {% endblock %}
