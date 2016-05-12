@@ -15,7 +15,7 @@ services:
             - ["init"]
 
 # Polls
-# Tip: A poll should define it's parent as poll
+# Tip: polls should define their parent as poll
 
     poll.commits:
         parent: poll
@@ -43,7 +43,7 @@ services:
         arguments: ['@source.civiweb']
     
 # Sources
-# Tip: A source should define it's parent as source
+# Tip: Sources should define their parent as source
 
     source.civiweb:
         parent: source
@@ -60,6 +60,11 @@ services:
         class: AppBundle\Utils\Source\Github
         arguments: ['@github.client', '@github.result_pager', '%source.github.auth_http_token%']
 
+    source.stackexchange:
+        parent: source
+        class: AppBundle\Utils\Source\StackExchange
+        arguments: [%source.stack_exchange.base_uri%']
+
     github.result_pager:
         class: Github\ResultPager
         arguments: ['@github.client']
@@ -73,3 +78,12 @@ services:
         arguments:
             - cache_dir: "%kernel.cache_dir%/github-api-cache"
             
+# Other services
+
+    identifier:
+        class: AppBundle\Utils\IdentifierService
+        arguments: ['@source.civicrm', '@doctrine.orm.entity_manager', '@contributor']
+
+    contributor:
+        class: AppBundle\Utils\ContributorService
+        arguments: ['@source.civicrm', '@doctrine.orm.entity_manager']
