@@ -31,7 +31,7 @@ class Issues extends Poll
     public function transform($result)
     {
         $task = $this->initTask();
-        $task->setExternalId($result['sha']);
+        $task->setExternalIdentifier($result['sha']);
         $task->setUrl($result['html_url']);
         $task->setDescription($result['commit']['message']);
         $task->setContributorExternalId($result['commit']['committer']['email']);

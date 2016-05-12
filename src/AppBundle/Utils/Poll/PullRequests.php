@@ -6,8 +6,6 @@ use AppBundle\Utils\Poll;
 
 class PullRequests extends Poll
 {
-    public $name = 'pullrequests';
-
     public function query()
     {
         $orgApi = $this->source->client->api('organization');
@@ -33,14 +31,14 @@ class PullRequests extends Poll
     public function transform($result)
     {
         $task = $this->initTask();
-        $task->setExternalId($result['sha']);
+        $task->setExternalIdentifier($result['sha']);
         $task->setUrl($result['html_url']);
         $task->setDescription($result['commit']['message']);
         $task->setContributorExternalId($result['commit']['committer']['email']);
         $task->setDate($this->createDate($result['commit']['committer']['date']));
         $task->setContributorExternalIdType('email');
         $task->setDescription($result['commit']['message']);
-        $task->setValue($this->value);
+        $task->setValue(5);
 
         return $task;
     }

@@ -6,8 +6,6 @@ use AppBundle\Utils\Poll;
 
 class StackExchange extends Poll
 {
-    public $name = 'stackexhchange';
-
     public function query()
     {
     }
