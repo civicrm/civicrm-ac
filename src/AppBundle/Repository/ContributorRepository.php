@@ -10,18 +10,4 @@ namespace AppBundle\Repository;
  */
 class ContributorRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findFromIdentifier($type, $identifer)
-    {
-        return $this->getEntityManager()
-        ->createQuery(
-            'SELECT c
-            FROM AppBundle:Contributor c
-            JOIN c.identifiers i
-            JOIN i.identifierType it
-            WHERE i.identifier = :identifier
-            AND it.name = :type')
-        ->setParameter('identifier', $identifer)
-        ->setParameter('type', $type)
-        ->getSingleResult();
-    }
 }
