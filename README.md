@@ -93,3 +93,5 @@ Creates a $task with values from the $result. Tasks have the following propertie
 * iframe for embedding on other websites (read only API)
 * Hall of fame for unknown contributors (i.e. people not linked to a contact in civicrm.org/civicrm)
 * Task that updates identifiers (e.g. when they become known, or when civicrm contacts have become merged, etc.)
+* link contributions to organisations (via relationships in civicrm)
+* add option to poll to update task on duplicate match
