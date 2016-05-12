@@ -11,7 +11,7 @@ use AppBundle\Entity\Task;
 /**
  * Task controller.
  *
- * @Route("/task")
+ * @Route("/tasks")
  */
 class TaskController extends Controller
 {
@@ -25,7 +25,10 @@ class TaskController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $tasks = $em->getRepository('AppBundle:Task')->findAll();
+        $tasks = $this->getDoctrine()->getManager()
+        ->createQuery('SELECT t FROM AppBundle:Task t ORDER BY t.date DESC')
+        ->setMaxResults(1000)
+        ->getResult();
 
         return $this->render('task/index.html.twig', array(
             'tasks' => $tasks,
@@ -35,13 +38,13 @@ class TaskController extends Controller
     /**
      * Finds and displays a Task entity.
      *
-     * @Route("/{id}", name="task_show")
+     * @Route("/{id}", name="task_view")
      * @Method("GET")
      */
     public function showAction(Task $task)
     {
 
-        return $this->render('task/show.html.twig', array(
+        return $this->render('task/view.html.twig', array(
             'task' => $task,
         ));
     }
