@@ -33,12 +33,12 @@ class Commits extends Poll
 
     public function transform($result, $task)
     {
-        $task->setExternalId($result['commit']['sha']);
+        $task->setExternalIdentifier($result['commit']['sha']);
         $task->setUrl($result['commit']['html_url']);
         $task->setDescription($result['commit']['commit']['message']);
         $task->setDate($this->createDate($result['commit']['commit']['committer']['date']));
-        $task->setContributorId($result['commit']['commit']['committer']['email']);
-        $task->setContributorIdType('email');
+        $task->setIdentifierString($result['commit']['commit']['committer']['email']);
+        $task->setIdentifierType('email');
         $task->setDescription($result['commit']['commit']['message']);
         $task->setValue(2);
         $task->setSubtype($result['repo']['name']);

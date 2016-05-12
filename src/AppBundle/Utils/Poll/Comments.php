@@ -13,12 +13,12 @@ class Comments extends Poll
 
     public function transform($result, $task)
     {
-        $task->setExternalId($result->cid);
+        $task->setExternalIdentifier($result->cid);
         $task->setDescription($result->text);
         $task->setDate($this->createDate($result->date));
         $task->setUrl($result->url);
-        $task->setContributorId($result->contact_id);
-        $task->setContributorIdType('contact_id');
+        $task->setIdentifierString($result->contact_id);
+        $task->setIdentifierType('contact_id');
         $task->setValue(1);
     }
 }
