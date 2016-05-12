@@ -40,7 +40,7 @@ app:poll commits -u # poll for commits, updating any that have already been reco
 app:poll commits -f "2015-01-01" -t "2015-12-31" # poll for commits made in 2015
 ```
 
-The default poll timeframe is yesterday.
+The default timeframe for the poll command is yesterday. On https://contributors.civicrm.org we poll for tasks every half hour for the past hour and every month for the past two months.
 
 ## Consuming tasks
 
