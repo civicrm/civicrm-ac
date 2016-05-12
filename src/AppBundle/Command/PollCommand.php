@@ -9,6 +9,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use AppBundle\Entity\Task;
+use AppBundle\Entity\Identifier;
+use AppBundle\Entity\Contributor;
 
 class PollCommand extends ContainerAwareCommand
 {
@@ -19,8 +21,8 @@ class PollCommand extends ContainerAwareCommand
         $this
         ->setName('app:poll')
         ->setDescription('Poll sources for tasks to record')
-        ->addArgument('poll', InputArgument::OPTIONAL, "Name of the poll that we want to run, or 'all' to run all defined polls.")
-        ->addOption('from', 'f', InputOption::VALUE_REQUIRED, 'When should we poll from?', 'midnight 1 week ago')
+        ->addArgument('poll', InputArgument::OPTIONAL, "Name of the poll that we want to run. Leave blank or set as 'all' to run all defined polls.")
+        ->addOption('from', 'f', InputOption::VALUE_REQUIRED, 'When should we poll from?', 'midnight yesterday')
         ->addOption('to', 't', InputOption::VALUE_REQUIRED, 'When should we poll to?', 'midnight today')
         ->addOption('list', 'l', InputOption::VALUE_NONE, 'List all polls')
         ->addOption('delete', 'd', InputOption::VALUE_NONE, 'Delete tasks');
@@ -32,13 +34,11 @@ class PollCommand extends ContainerAwareCommand
         $this->io->title('Poll for tasks');
         if ($input->getOption('list')) {
             $this->listPolls();
+
             return;
         }
-        if(!$this->name = $input->getArgument('poll')){
-            $this->io->error("No poll defined");
-            $this->io->block("Please include a poll from the list below or type 'all' to run all polls.");
-            $this->listPolls();
-            return;
+        if (!$this->name = $input->getArgument('poll')) {
+            $this->name = 'all';
         };
 
         $this->startDate = new \DateTime($input->getOption('from'), new \DateTimeZone('UTC'));
@@ -47,11 +47,12 @@ class PollCommand extends ContainerAwareCommand
         //Run all polls if requested
         if ($this->name == 'all') {
             $this->io->text('Running ALL polls.');
-            foreach($this->getAllPolls() as $poll){
+            foreach ($this->getAllPolls() as $poll) {
                 $this->name = $poll;
                 $this->poll = $this->getContainer()->get('poll.'.$poll);
                 $this->poll($input, $output);
             }
+
             return;
         }
 
@@ -64,22 +65,7 @@ class PollCommand extends ContainerAwareCommand
             $this->io->error("No service has been defined for {$this->name}");
         }
     }
-    
-    protected function listPolls(){
-        $this->io->text('Available polls:');
-        $this->io->listing($this->getAllPolls());
-    }
-    
-    protected function getAllPolls(){
-        foreach ($this->getContainer()->getServiceIds() as $service) {
-            if (substr($service, 0, 5) === 'poll.') {
-                $polls[]=substr($service, 5);
-            }
-        }
-        return $polls;
-    }
-    
-    
+
     protected function poll(InputInterface $input, OutputInterface $output)
     {
         if ($input->getOption('delete')) {
@@ -96,29 +82,56 @@ class PollCommand extends ContainerAwareCommand
 
         $this->poll->query();
         $this->flushErrors();
-        $countResults = count($this->poll->results);
-        $this->io->text(" * Found {$countResults} {$this->name}");
 
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $countResults = count($this->poll->results);
+        $this->io->text(" * Found {$countResults} {$this->name}.");
         $validator = $this->getContainer()->get('validator');
 
-        // print_r($this->poll->results);exit;
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $identifierRepo = $em->getRepository('AppBundle:Identifier');
+        $identifierTypeRepo = $em->getRepository('AppBundle:IdentifierType');
+        $identifierService = $this->getContainer()->get('identifier');
+
+        $this->io->text(" * Adding {$this->name}.");
+        $this->io->write("    ");
+
         $count = 0;
-        $this->io->text(" * Adding {$this->name}");
+
         foreach ($this->poll->results as $result) {
             $task = new Task();
             $task->setType($this->name);
             $this->poll->transform($result, $task);
+            $identifierString = $task->getIdentifierString();
+            $identifierType = $identifierTypeRepo->findOneByName($task->getIdentifierType());
+            $contactIdIdentifierType = $identifierTypeRepo->findOneByName('contact_id');
+
+            //Check if an identifier exists for string and type
+            $identifier = $identifierRepo->findOneBy(array('string' => $identifierString, 'type' => $identifierType));
+
+            //If the identifier does not exist, create it.
+            if (!$identifier) {
+                $identifier = new Identifier();
+                $identifier->setString($identifierString);
+                $identifier->setType($identifierType);
+                $em->persist($identifier);
+                $em->flush();
+                $identifierService->lookupContributor($identifier);
+            }
+            $task->setIdentifier($identifier);
             $errors = $validator->validate($task);
             if ($errors->count()) {
-                $this->io->note("Task with id {$task->getExternalId()} ({$task->getUrl()}) already exists in database."); // TODO: we might be masking other errors here
+                $this->io->note("Task with id {$task->getExternalIdentifier()} ({$task->getUrl()}) already exists in database."); // TODO: we might be masking other errors here
             } else {
                 ++$count;
+                $this->io->write('.');
                 $em->persist($task);
                 if (($count % 100) === 0) {
                     $em->flush();
                     $em->clear();
                 }
+            }
+            if (($count % 50) === 0) {
+                $this->io->write("\n    ");
             }
         }
         $em->flush();
@@ -145,6 +158,23 @@ class PollCommand extends ContainerAwareCommand
         ->setParameter('name', $this->name);
 
         $this->io->text(" * {$query->getResult()} {$this->name} deleted.");
+    }
+
+    protected function listPolls()
+    {
+        $this->io->text('Available polls:');
+        $this->io->listing($this->getAllPolls());
+    }
+
+    protected function getAllPolls()
+    {
+        foreach ($this->getContainer()->getServiceIds() as $service) {
+            if (substr($service, 0, 5) === 'poll.') {
+                $polls[] = substr($service, 5);
+            }
+        }
+
+        return $polls;
     }
 
     public function flushErrors()
