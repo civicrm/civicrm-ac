@@ -23,36 +23,63 @@ class Contributor
     private $id;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="name", type="string", length=255)
-     */
-    private $name;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="contact_id", type="integer")
+     * @ORM\Column(type="integer", length=255, unique=true)
      */
     private $contactId;
-    
+
     /**
-     * @ORM\OneToMany(targetEntity="Task", mappedBy="contributor")
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255)
      */
-    private $tasks;
+    private $name;
 
     /**
     * @ORM\OneToMany(targetEntity="Identifier", mappedBy="contributor")
     */
     private $identifiers;
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->identifiers = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set contactId
+     *
+     * @param string $contactId
+     *
+     * @return Contributor
+     */
+    public function setContactId($contactId)
+    {
+        $this->contactId = $contactId;
+
+        return $this;
+    }
+
+    /**
+     * Get contactId
+     *
+     * @return string
+     */
+    public function getContactId()
+    {
+        return $this->contactId;
     }
 
     /**
@@ -77,73 +104,6 @@ class Contributor
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set contactId
-     *
-     * @param integer $contactId
-     *
-     * @return Contributor
-     */
-    public function setContactId($contactId)
-    {
-        $this->contactId = $contactId;
-
-        return $this;
-    }
-
-    /**
-     * Get contactId
-     *
-     * @return int
-     */
-    public function getContactId()
-    {
-        return $this->contactId;
-    }
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->tasks = new ArrayCollection();
-        $this->identifiers = new ArrayCollection();
-    }
-
-    /**
-     * Add task
-     *
-     * @param \AppBundle\Entity\Task $task
-     *
-     * @return Contributor
-     */
-    public function addTask(\AppBundle\Entity\Task $task)
-    {
-        $this->tasks[] = $task;
-
-        return $this;
-    }
-
-    /**
-     * Remove task
-     *
-     * @param \AppBundle\Entity\Task $task
-     */
-    public function removeTask(\AppBundle\Entity\Task $task)
-    {
-        $this->tasks->removeElement($task);
-    }
-
-    /**
-     * Get tasks
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTasks()
-    {
-        return $this->tasks;
     }
 
     /**

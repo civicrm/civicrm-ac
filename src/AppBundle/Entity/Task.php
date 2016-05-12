@@ -9,10 +9,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Task
  *
- * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="search_idx", columns={"type", "externalId"})})
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="constraint", columns={"type", "external_identifier"})})
  * @ORM\Entity
  * @UniqueEntity(
- *   fields={"type", "externalId"},
+ *   fields={"type", "externalIdentifier"},
  *   message="Combination of type and external id should be unique"
  * )
  **/
@@ -40,10 +40,10 @@ class Task
     /**
      * @var string
      *
-     * @ORM\Column(name="externalId", type="string", length=255)
+     * @ORM\Column(type="string", length=255)
      * @Assert\NotNull()
      */
-    private $externalId;
+    private $externalIdentifier;
 
     /**
      * @var DateTime
@@ -79,24 +79,25 @@ class Task
     /**
      * @var string
      *
-     * @ORM\Column(name="contributorId", type="string", length=255)
+     * @ORM\Column(type="string", length=255)
      * @Assert\NotNull()
      */
-    private $contributorId;
+    private $IdentifierString;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="contributorIdType", type="string", length=255)
+     * @ORM\Column(type="string", length=255)
      * @Assert\NotNull()
      */
-    private $contributorIdType;
+    private $IdentifierType;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Contributor", inversedBy="tasks")
-     * @ORM\JoinColumn(name="contributor_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Identifier", inversedBy="tasks")
+     * @ORM\JoinColumn(name="identifier_id", referencedColumnName="id")
      */
-    private $contributor;
+    private $identifier;
+
 
 
     /**
@@ -158,27 +159,27 @@ class Task
     }
 
     /**
-     * Set externalId
+     * Set externalIdentifier
      *
-     * @param string $externalId
+     * @param string $externalIdentifier
      *
      * @return Task
      */
-    public function setExternalId($externalId)
+    public function setExternalIdentifier($externalIdentifier)
     {
-        $this->externalId = $externalId;
+        $this->externalIdentifier = $externalIdentifier;
 
         return $this;
     }
 
     /**
-     * Get externalId
+     * Get externalIdentifier
      *
      * @return string
      */
-    public function getExternalId()
+    public function getExternalIdentifier()
     {
-        return $this->externalId;
+        return $this->externalIdentifier;
     }
 
     /**
@@ -278,74 +279,74 @@ class Task
     }
 
     /**
-     * Set contributorId
+     * Set identifierString
      *
-     * @param string $contributorId
+     * @param string $identifierString
      *
      * @return Task
      */
-    public function setContributorId($contributorId)
+    public function setIdentifierString($identifierString)
     {
-        $this->contributorId = $contributorId;
+        $this->IdentifierString = $identifierString;
 
         return $this;
     }
 
     /**
-     * Get contributorId
+     * Get identifierString
      *
      * @return string
      */
-    public function getContributorId()
+    public function getIdentifierString()
     {
-        return $this->contributorId;
+        return $this->IdentifierString;
     }
 
     /**
-     * Set contributorIdType
+     * Set identifierType
      *
-     * @param string $contributorIdType
+     * @param string $identifierType
      *
      * @return Task
      */
-    public function setContributorIdType($contributorIdType)
+    public function setIdentifierType($identifierType)
     {
-        $this->contributorIdType = $contributorIdType;
+        $this->IdentifierType = $identifierType;
 
         return $this;
     }
 
     /**
-     * Get contributorIdType
+     * Get identifierType
      *
      * @return string
      */
-    public function getContributorIdType()
+    public function getIdentifierType()
     {
-        return $this->contributorIdType;
+        return $this->IdentifierType;
     }
 
     /**
-     * Set contributor
+     * Set identifier
      *
-     * @param \AppBundle\Entity\Contributor $contributor
+     * @param \AppBundle\Entity\Identifier $identifier
      *
      * @return Task
      */
-    public function setContributor(\AppBundle\Entity\Contributor $contributor = null)
+    public function setIdentifier(\AppBundle\Entity\Identifier $identifier = null)
     {
-        $this->contributor = $contributor;
+        $this->identifier = $identifier;
 
         return $this;
     }
 
     /**
-     * Get contributor
+     * Get identifier
      *
-     * @return \AppBundle\Entity\Contributor
+     * @return \AppBundle\Entity\Identifier
      */
-    public function getContributor()
+    public function getIdentifier()
     {
-        return $this->contributor;
+        return $this->identifier;
     }
 }

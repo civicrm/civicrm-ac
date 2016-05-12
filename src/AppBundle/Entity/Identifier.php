@@ -3,11 +3,12 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Identifier
  *
- * @ORM\Table(name="identifier")
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="constraint", columns={"string", "type_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\IdentifierRepository")
  */
 class Identifier
@@ -24,30 +25,99 @@ class Identifier
     /**
      * @var string
      *
-     * @ORM\Column(name="identifier", type="string", length=255)
+     * @ORM\Column(type="string", length=255)
      */
-    private $identifier;
+     private $string;
+
+     /**
+      * @var \DateTime
+      *
+      * @ORM\Column(type="datetime")
+      */
+     private $expiry;
 
     /**
     * @ORM\ManyToOne(targetEntity="Contributor", inversedBy="identifiers")
-    * @ORM\JoinColumn(nullable=false)
     */
     private $contributor;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Task", mappedBy="identifier")
+     */
+    private $tasks;
 
     /**
     * @ORM\ManyToOne(targetEntity="IdentifierType", inversedBy="identifiers")
     * @ORM\JoinColumn(nullable=false)
     */
-    private $identifierType;
+    private $type;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->tasks = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->expiry = new \DateTime('+ 1 week');
+
+    }
 
     /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set string
+     *
+     * @param string $string
+     *
+     * @return Identifier
+     */
+    public function setString($string)
+    {
+        $this->string = $string;
+
+        return $this;
+    }
+
+    /**
+     * Get string
+     *
+     * @return string
+     */
+    public function getString()
+    {
+        return $this->string;
+    }
+
+    /**
+     * Set expiry
+     *
+     * @param \DateTime $expiry
+     *
+     * @return Identifier
+     */
+    public function setExpiry($expiry)
+    {
+        $this->expiry = $expiry;
+
+        return $this;
+    }
+
+    /**
+     * Get expiry
+     *
+     * @return \DateTime
+     */
+    public function getExpiry()
+    {
+        return $this->expiry;
     }
 
     /**
@@ -75,50 +145,60 @@ class Identifier
     }
 
     /**
-     * Set identifier
+     * Add task
      *
-     * @param string $identifier
+     * @param \AppBundle\Entity\Task $task
      *
      * @return Identifier
      */
-    public function setIdentifier($identifier)
+    public function addTask(\AppBundle\Entity\Task $task)
     {
-        $this->identifier = $identifier;
+        $this->tasks[] = $task;
 
         return $this;
     }
 
     /**
-     * Get identifier
+     * Remove task
      *
-     * @return string
+     * @param \AppBundle\Entity\Task $task
      */
-    public function getIdentifier()
+    public function removeTask(\AppBundle\Entity\Task $task)
     {
-        return $this->identifier;
+        $this->tasks->removeElement($task);
     }
 
     /**
-     * Set identifierType
+     * Get tasks
      *
-     * @param \AppBundle\Entity\IdentifierType $identifierType
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
+    }
+
+    /**
+     * Set type
+     *
+     * @param \AppBundle\Entity\IdentifierType $type
      *
      * @return Identifier
      */
-    public function setidentifierType(\AppBundle\Entity\IdentifierType $identifierType = null)
+    public function setType(\AppBundle\Entity\IdentifierType $type)
     {
-        $this->identifierType = $identifierType;
+        $this->type = $type;
 
         return $this;
     }
 
     /**
-     * Get identifierType
+     * Get type
      *
      * @return \AppBundle\Entity\IdentifierType
      */
-    public function getidentifierType()
+    public function getType()
     {
-        return $this->identifierType;
+        return $this->type;
     }
 }

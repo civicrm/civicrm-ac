@@ -24,7 +24,7 @@ class IdentifierType
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255, unique=true)
      */
     private $name;
 
@@ -35,9 +35,17 @@ class IdentifierType
 
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->identifiers = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
@@ -66,13 +74,6 @@ class IdentifierType
     public function getName()
     {
         return $this->name;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->identifiers = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
