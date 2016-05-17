@@ -13,7 +13,6 @@
                 <th>Date</th>
                 <th>Url</th>
                 <th>Description</th>
-                <th>Value</th>
                 <th>Identifier string</th>
                 <th>Identifier type</th>
                 <th>Contributor</th>
@@ -29,7 +28,6 @@
                 <td>{% if task.date %}{{ task.date|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{{ task.url }}</td>
                 <td>{{ task.description }}</td>
-                <td>{{ task.value }}</td>
                 <td>{{ task.identifierString }}</td>
                 <td>{{ task.identifierType }}</td>
                 {% if task.identifier.contributor.name is defined %}
